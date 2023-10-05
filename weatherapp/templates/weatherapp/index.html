@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{%block content%}
+
+<div class="container">
+    <div class="title">Welcome to your weather guide</div>
+
+    <div class="search-input">
+        <form id="weather-form" method="POST">
+            {% csrf_token %}
+            <input title="city" type="text" id="city" name="city" placeholder="Enter your city" required>
+
+            <select title="units" id="units" name="units" required>
+                <option value="metric">Celsius</option>
+                <option value="imperial">Fahrenheit</option>
+            </select>
+
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <div id="output"></div>
+
+    {% if data %}
+    <div id="weather-data" class="weather">
+        <div class="city">{{ data.name }}</div>
+        <div class="temperature">{{ data.main.temp }} &deg;C</div>
+        <div class="description">{{ data.weather.0.description }}</div>
+        <img src="http://openweathermap.org/img/w/{{ data.weather.0.icon }}.png" alt="{{ weather_data.description }}">
+    </div>
+    {%else%}
+    <div id="weather-data" class="weather">
+        <div class="city">Search your desired location</div>
+    </div>
+    <div id="weather-tips"></div>
+    {%endif%}
+    {% if weather_tips %}
+
+    <div id="weather-tips" class="suggestions">
+
+        {% for tip in weather_tips %}
+        <div class="suggestion">{{ tip }}</div>
+        {% endfor %}
+
+    </div>
+    {%endif%}
+    {% if locations %}
+    <div class="locations">
+        <h3 class="locations-title">Check Out Your Searched Locations</h3>
+
+
+        <div id="locations" class="locations-list">
+        </div>
+    </div>
+    {%endif%}
+    <div id="preloader" class="preloader">
+        <div class="spinner"></div>
+    </div>
+    <div class="drawer-container">
+        <div id="drawer" class="drawer">
+            <div class="drawer-header">
+                <h2 id="drawer-title"></h2>
+                <button class="drawer-close-btn" onclick="closeDrawer()">Close</button>
+            </div>
+            <div id="drawer-content" class="drawer-content">
+                <div class="subtitle">All the past searches for this location will be found here</div>
+                <div id="locations-list" class="locations-list">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tips-popup" id="tips-popup">
+       
+        <div id="tips-backdrop" class="tips-backdrop"></div>
+        <div  class="content">
+            <div class="tips-header">
+                <h2 id="title">Follow these awesome tips to remain spectacular 😎</h2>
+                <button class="tips-close-btn" onclick="closeTips()">Close</button>
+            </div>
+            <div id="tips-content" class="tips-list">
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock%}
